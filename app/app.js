@@ -1,4 +1,5 @@
 import React from "react";
+import GameStore from "scripts/stores/game";
 
 export default class App extends React.Component {
 	render() {

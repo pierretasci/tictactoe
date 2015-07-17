@@ -2,7 +2,11 @@
   "parser": "babel-eslint",
   "rules": {
     "strict": 0,
-    "no-unused-vars": 0
+    "no-unused-vars": 0,
+    "no-mixed-spaces-and-tabs": 0,
+    "comma-spacing": 0,
+    "no-underscore-dangle": 0,
+    "eqeqeq": 0
   },
   "env": {
     "browser": true,
