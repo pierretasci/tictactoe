@@ -14,5 +14,8 @@ export default {
 		EMPTY: null,
 		IN_PLAY: null,
 		OVER: null
+	}),
+	ACTIONS: keyMirror({
+		CALCULATE_NEXT_MOVE: null
 	})
 };

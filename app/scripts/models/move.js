@@ -4,4 +4,16 @@ export default class Move {
 		this.col = col;
 		this.player = player;
 	}
+
+	getRow() {
+		return this.row;
+	}
+
+	getCol() {
+		return this.col;
+	}
+
+	getPlayer() {
+		return this.player;
+	}
 }

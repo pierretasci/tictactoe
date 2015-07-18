@@ -1,10 +1,10 @@
-import Dispatcher from "scripts/core/dispatcher";
+import Dispatcher from "../core/dispatcher";
 import {EventEmitter} from "events";
 import assign from "object-assign";
-import Board from "scripts/models/board";
-import constants from "scripts/core/constants";
+import Board from "../models/board";
+import constants from "../core/constants";
 
-let _board = new Board();
+let _board = null;
 let _activePlayer = null;
 let _nextChoice = null;
 
@@ -12,41 +12,52 @@ const CHANGE_EVENT = "change";
 
 // Private functions
 
-function getNewBoardWithMove(row, col, player) {
-	var newBoard = _board.clone();
+function getNewBoardWithMove(board, row, col, player) {
+	var newBoard = board.clone();
 	newBoard.setPlayerAt(row, col, player);
 	return newBoard;
 }
 
-function getScore(board) {
-	var gameWinner = board.isGameOver();
+function getScore(board, depth) {
+	var gameWinner = board.getGameWinner();
 	if(gameWinner == constants.PLAYERS.COMPUTER) {
-		return 1;
+		return 1 - depth;
 	} else if(gameWinner == constants.PLAYERS.HUMAN) {
-		return -1;
+		return depth - 1;
 	} else {
 		return 0;
 	}
 }
 
-function minMax(board) {
-	if(board.isGameOver()) {
-		return getScore(board);
+let logOnce = (function() {
+	var executed = false;
+	return function(message) {
+		if(!executed) {
+			executed = true;
+			console.log(message);
+		}
 	}
+})();
 
+function minMax(board, activePlayer, depth) {
+	if(board.isGameOver()) {
+		return getScore(board, depth);
+	}
+	depth += 1;
 	let scores = [];
 	let moves = [];
 
-	board.getPossibleMovesForPlayer(constants.PLAYERS.COMPUTER).map(function(move) {
-		let possibleBoard = getNewBoardWithMove(move.row, move.col, move.player);
-		scores.push(minMax(possibleBoard));
+	board.getPossibleMovesForPlayer(activePlayer).map(function(move) {
+		let possibleBoard = getNewBoardWithMove(board, move.getRow(), move.getCol(), move.getPlayer());
+		let newActivePlayer = (constants.PLAYERS.HUMAN == activePlayer ? constants.PLAYERS.COMPUTER : constants.PLAYERS.HUMAN);
+		scores.push(minMax(possibleBoard, newActivePlayer, depth));
 		moves.push(move);
 	});
 
-	if(_activePlayer == constants.PLAYERS.COMPUTER) {
+	if(activePlayer == constants.PLAYERS.COMPUTER) {
 		// GET THE MAX
-		let maxArrayIndex = null;
-		let maxScore = 0;
+		let maxArrayIndex = 0;
+		let maxScore = -100;
 		scores.map(function(score, i) {
 			if(score > maxScore) {
 				maxArrayIndex = i;
@@ -56,8 +67,8 @@ function minMax(board) {
 		return maxScore;
 	} else {
 		// GET THE MIN
-		let minArrayIndex = null;
-		let minScore = 0;
+		let minArrayIndex = 0;
+		let minScore = 100;
 		scores.map(function(score, i) {
 			if(score > minScore) {
 				minArrayIndex = i;
@@ -69,6 +80,29 @@ function minMax(board) {
 }
 
 var GameStore = assign({}, EventEmitter.prototype, {
+
+	startGame: function() {
+		_board = new Board();
+		_activePlayer = null;
+		_nextChoice = null;
+	},
+
+	getBoard: function() {
+		return _board;
+	},
+
+	// ONLY USED FOR TESTING
+	setBoard: function(board) {
+		_board = board;
+	},
+
+	getActivePlayer: function() {
+		return _activePlayer;
+	},
+
+	getNextComputerMove: function() {
+		return _nextChoice;
+	},
 
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -89,7 +123,15 @@ var GameStore = assign({}, EventEmitter.prototype, {
   },
 
   dispatcherIndex: Dispatcher.register(function(payload) {
-    var action = payload.action;
+    var action = payload.actionType;
+
+
+    switch(action) {
+    	case constants.ACTIONS.CALCULATE_NEXT_MOVE:
+    		_activePlayer = constants.PLAYERS.COMPUTER;
+    		minMax(_board, _activePlayer, 0);
+    		break;
+    }
 
     return true; // No errors. Needed by promise in Dispatcher.
   })
