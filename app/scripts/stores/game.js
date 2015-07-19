@@ -4,6 +4,7 @@ import assign from "object-assign";
 import Board from "../models/board";
 import constants from "../core/constants";
 import GameManager from "../core/gamemanager";
+import Move from "../models/move";
 
 let _board = null;
 let _activePlayer = null;
@@ -12,20 +13,19 @@ let _nextChoice = null;
 const CHANGE_EVENT = "change";
 
 var GameStore = assign({}, EventEmitter.prototype, {
-
-	startGame: function() {
+	startGame: function(initialPlayer) {
 		_board = new Board();
-		_activePlayer = null;
+		_activePlayer = initialPlayer;
 		_nextChoice = null;
+
+		// If the computer has the first choice, so calculate our first move
+		if(initialPlayer == GameManager.C) {
+			GameStore.calculateComputerMove();
+		}
 	},
 
 	getBoard: function() {
 		return _board;
-	},
-
-	// ONLY USED FOR TESTING
-	setBoard: function(board) {
-		_board = board;
 	},
 
 	getActivePlayer: function() {
@@ -34,6 +34,16 @@ var GameStore = assign({}, EventEmitter.prototype, {
 
 	getNextComputerMove: function() {
 		return _nextChoice;
+	},
+
+	calculateComputerMove: function() {
+		// Calculate our next computer move
+		_nextChoice = GameManager.minMax(_board, GameManager.C);
+
+		// Apply this move to the board
+		_board = GameManager.getNewBoardWithMove(_board, _nextChoice);
+		_activePlayer = GameManager.H;
+		GameStore.emitChange();
 	},
 
   emitChange: function() {
@@ -57,11 +67,18 @@ var GameStore = assign({}, EventEmitter.prototype, {
   dispatcherIndex: Dispatcher.register(function(payload) {
     var action = payload.actionType;
 
-
     switch(action) {
-    	case constants.ACTIONS.CALCULATE_NEXT_MOVE:
-    		_activePlayer = constants.PLAYERS.COMPUTER;
-    		_nextChoice = GameManager.minMax(_board, _activePlayer, 0);
+    	case constants.ACTIONS.START_GAME:
+    		GameStore.startGame(payload.initialPlayer);
+    		break;
+    	case constants.ACTIONS.ENACT_PLAYER_MOVE:
+    		_activePlayer = GameManager.C;
+    		let playerMove = payload.playerMove;
+    		_board = GameManager.getNewBoardWithMove(_board, 
+    			new Move(playerMove.row, playerMove.col, playerMove.player));
+
+    		// Now start calculating the computer's next move
+    		GameStore.calculateComputerMove();
     		break;
     }
 

@@ -1,83 +1,94 @@
-// jest.dontMock('../app/scripts/stores/game');
-// jest.dontMock('object-assign');
-// jest.dontMock('keymirror');
-// jest.dontMock('../app/scripts/core/constants');
-// jest.dontMock('../app/scripts/models/board');
-// jest.dontMock('../app/scripts/models/move');
+jest.dontMock('object-assign');
+jest.dontMock('keymirror');
+jest.dontMock('../app/scripts/stores/game');
+jest.dontMock('../app/scripts/core/constants');
+jest.dontMock('../app/scripts/core/gamemanager');
+jest.dontMock('../app/scripts/models/board');
+jest.dontMock('../app/scripts/models/move');
 
-// describe('GameStore', function() {
+describe('GameStore', function() {
+  var constants = require('../app/scripts/core/constants');
+  var Board = require('../app/scripts/models/board');
+  var GameManager = require('../app/scripts/core/gamemanager');
+  var Dispatcher;
+  var GameStore;
+  var callback;
+  var initialTime = 0;
 
-//   var constants = require('../app/scripts/core/constants');
-//   var Board = require('../app/scripts/models/board');
-//   var Dispatcher;
-//   var GameStore;
-//   var callback;
+  // mock actions
+  var actionStartGame = function(initialPlayer) {
+  	return {
+  		actionType: constants.ACTIONS.START_GAME,
+  		initialPlayer: initialPlayer
+  	};
+  };
 
-//   // mock actions
-//   var actionCalcNextMove = {
-//   	actionType: constants.ACTIONS.CALCULATE_NEXT_MOVE
-//   };
+  var actionEnactPlayerMove = function(row, col, player) {
+  	return {
+  		actionType: constants.ACTIONS.ENACT_PLAYER_MOVE,
+	  	playerMove: {
+	  		row: row,
+	  		col: col,
+	  		player: player
+	  	}
+	  };
+  };
 
-//   beforeEach(function() {
-//     Dispatcher = require('../app/scripts/core/dispatcher');
-//     GameStore = require('../app/scripts/stores/game');
-//     callback = Dispatcher.register.mock.calls[0][0];
-//   });
+  beforeEach(function() {
+    Dispatcher = require('../app/scripts/core/dispatcher');
+    GameStore = require('../app/scripts/stores/game');
+    callback = Dispatcher.register.mock.calls[0][0];
+  });
 
-//   it('registers a callback with the dispatcher', function() {
-//     expect(Dispatcher.register.mock.calls.length).toBe(1);
-//   });
+  it('registers a callback with the dispatcher', function() {
+    expect(Dispatcher.register.mock.calls.length).toBe(1);
+  });
 
-//   it('sets up a basic tic tac toe board', function() {
-//   	GameStore.startGame();
-//   	expect(GameStore.getBoard()).not.toBe(null);
-//   	expect(GameStore.getActivePlayer()).toBe(null);
-//   	expect(GameStore.getBoard().getAvailableSpaces()).toBe(9);
-//   });
+  it('sets up a basic tic tac toe board, human first', function() {
+  	callback(actionStartGame(GameManager.H));
+  	
+  	expect(GameStore.getBoard()).not.toBe(null);
+  	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getAvailableSpaces()).toBe(9);
+  });
 
-//   it('will go for the win', function() {
-//   	GameStore.startGame();
-//   	var H = constants.PLAYERS.HUMAN;
-// 		var C = constants.PLAYERS.COMPUTER;	
-// 		var initboard = [		C, null, 	 	H,
-// 										 		C, null, 		C,
-// 								 		 null, 		H, 		H];
-// 		var board = new Board();
-// 		board.init(initboard);
+  it('sets up a basic tic tac toe board, computer first', function() {
+  	callback(actionStartGame(GameManager.C));
 
-// 		GameStore.setBoard(board);
+  	expect(GameStore.getBoard()).not.toBe(null);
+  	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getAvailableSpaces()).toBe(8);
+  });
 
-//   	callback(actionCalcNextMove);
-//   	expect(GameStore.getNextComputerMove()).not.toBe(null);
-//   	expect(GameStore.getNextComputerMove().getRow()).toBe(3);
-//   	expect(GameStore.getNextComputerMove().getCol()).toBe(1);
-//   });
+  it('runs through an easy game', function() {
+  	callback(actionStartGame(GameManager.H));
+  	callback(actionEnactPlayerMove(1, 1, GameManager.H));
 
-//   it('will block the human player', function() {
-//   	GameStore.startGame();
-//   	var H = constants.PLAYERS.HUMAN;
-// 		var C = constants.PLAYERS.COMPUTER;	
-// 		var initboard = [		C, 		C, 	 	H,
-// 										 null, null, 		C,
-// 								 		 		H, 		H, null];
-// 		var board = new Board();
-// 		board.init(initboard);
+  	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(1, 1)).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(3, 3)).toBe(GameManager.C);
 
-// 		GameStore.setBoard(board);
+  	// Now make a move that will force the computer to block
+  	callback(actionEnactPlayerMove(1, 2, GameManager.H));
 
-//   	callback(actionCalcNextMove);
-//   	expect(GameStore.getNextComputerMove()).not.toBe(null);
-//   	expect(GameStore.getNextComputerMove().getRow()).toBe(3);
-//   	expect(GameStore.getNextComputerMove().getCol()).toBe(3);
-//   });
+  	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(1, 3)).toBe(GameManager.C);
+  	expect(GameStore.getBoard().getPlayerAt(1, 2)).toBe(GameManager.H);
 
-//   it('will pick the bottom right corner as starting move', function() {
-//   	GameStore.startGame();
-//   	callback(actionCalcNextMove);
+  	// Human must now block 2, 3
+  	callback(actionEnactPlayerMove(2, 3, GameManager.H));
 
-//   	expect(GameStore.getNextComputerMove()).not.toBe(null);
-//   	expect(GameStore.getNextComputerMove().getRow()).toBe(3);
-//   	expect(GameStore.getNextComputerMove().getCol()).toBe(3);
-//   });
+  	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(2, 3)).toBe(GameManager.H);
+  	// The computer's next best move is to trap the human by placing it in the bottom left corner
+  	expect(GameStore.getBoard().getPlayerAt(3, 1)).toBe(GameManager.C);
 
-// });
+  	// Human will block 2, 2 so computer should go for win at 3, 2
+  	callback(actionEnactPlayerMove(2, 2, GameManager.H));
+		expect(GameStore.getActivePlayer()).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(2, 2)).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(3, 2)).toBe(GameManager.C);  	
+  	expect(GameStore.getBoard().isGameOver()).toBe(true);
+  	expect(GameStore.getBoard().getGameWinner()).toBe(GameManager.C);
+  });
+});

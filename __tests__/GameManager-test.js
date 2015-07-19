@@ -44,24 +44,24 @@ describe('GameStore', function() {
     board.init(initboard);
 
     // Human won, depth 0, return a score of -1
-    expect(GameManager.getScore(board, 0)).toBe(-1);
+    expect(GameManager.getScore(board, 0)).toBe(-10);
     // Human won, depth 3, return a score of 2
-    expect(GameManager.getScore(board, 3)).toBe(2);
+    expect(GameManager.getScore(board, 3)).toBe(-7);
   })
 
   it('will go for the win', function() {
   	var H = constants.PLAYERS.HUMAN;
 		var C = constants.PLAYERS.COMPUTER;	
-		var initboard = [		C, null, 	 	H,
+		var initboard = [null, null, 	 	H,
 										 		C, null, 		C,
-								 		 null, 		H, 		H];
+								 		    C, 		H, 		H];
 		var board = new Board();
 		board.init(initboard);
 
     var choice = GameManager.minMax(board, C);
 
   	expect(choice).not.toBe(null);
-  	expect(choice.getRow()).toBe(3);
+  	expect(choice.getRow()).toBe(1);
   	expect(choice.getCol()).toBe(1);
   });
 
@@ -69,25 +69,26 @@ describe('GameStore', function() {
   	var H = constants.PLAYERS.HUMAN;
 		var C = constants.PLAYERS.COMPUTER;	
 		var initboard = [		C, 		C, 	 	H,
-										 null, null, 		C,
-								 		 		H, 		H, null];
+										    H,    H, null,
+								 		 null, null,    C];
 		var board = new Board();
 		board.init(initboard);
 
 		var choice = GameManager.minMax(board, C);
 
   	expect(choice).not.toBe(null);
-  	expect(choice.getRow()).toBe(3);
+  	expect(choice.getRow()).toBe(2);
   	expect(choice.getCol()).toBe(3);
   });
 
-  it('will pick the bottom right corner as starting move', function() {
+  it('will pick a corner as starting move', function() {
 
     var choice = GameManager.minMax(new Board(), GameManager.C);
 
   	expect(choice).not.toBe(null);
-  	expect(choice.getRow()).toBe(3);
-  	expect(choice.getCol()).toBe(3);
+  	expect((choice.getRow() === 1 && choice.getCol() === 1) ||
+     (choice.getRow() === 1 && choice.getCol() === 3) ||
+      (choice.getRow() === 3 || choice.getCol() === 1) ||
+      (choice.getRow() === 3 || choice.getCol() === 3)).toBeTruthy();
   });
-
 });

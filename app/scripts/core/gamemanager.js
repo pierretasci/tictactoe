@@ -13,9 +13,9 @@ let GameManager = {
 	getScore: function(board, depth) {
 		var gameWinner = board.getGameWinner();
 		if(gameWinner == GameManager.C) {
-			return 1 - depth;
+			return 10 - depth;
 		} else if(gameWinner == GameManager.H) {
-			return depth - 1;
+			return depth - 10;
 		} else {
 			return 0;
 		}
@@ -41,7 +41,7 @@ let GameManager = {
 			if(_activePlayer == GameManager.C) {
 				// GET THE MAX
 				let maxArrayIndex = 0;
-				let maxScore = -100;
+				let maxScore = scores[0];
 				scores.map(function(score, i) {
 					if(score > maxScore) {
 						maxArrayIndex = i;
@@ -52,7 +52,7 @@ let GameManager = {
 			} else {
 				// GET THE MIN
 				let minArrayIndex = 0;
-				let minScore = 100;
+				let minScore = scores[0];
 				scores.map(function(score, i) {
 					if(score > minScore) {
 						minArrayIndex = i;

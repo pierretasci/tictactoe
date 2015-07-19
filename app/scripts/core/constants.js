@@ -16,6 +16,7 @@ export default {
 		OVER: null
 	}),
 	ACTIONS: keyMirror({
-		CALCULATE_NEXT_MOVE: null
+		START_GAME: null,
+		ENACT_PLAYER_MOVE: null
 	})
 };
