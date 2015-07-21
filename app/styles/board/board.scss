@@ -2,6 +2,7 @@
 @import '../_media';
 
 $borderWidth: 5px;
+$intendedRadius: 3px;
 $borderColor: $shakespeare;
 
 @mixin square-border-x {
@@ -25,6 +26,24 @@ $borderColor: $shakespeare;
 			@if($i % 3 != 0) {
 				border-left-width: $borderWidth;
 			}
+
+			// === Now the radiuses ===
+			
+			@if($i < 5 and $i != 2) {
+				border-bottom-right-radius: $borderWidth + $intendedRadius;
+			}
+
+			@if($i > 0 and $i < 6 and $i != 3) {
+				border-bottom-left-radius: $borderWidth + $intendedRadius;
+			}
+
+			@if($i > 2 and $i < 8 and $i != 5) {
+				border-top-right-radius: $borderWidth + $intendedRadius;
+			}
+
+			@if($i > 3 and $i != 6) {
+				border-top-left-radius: $borderWidth + $intendedRadius;
+			}
 		}
 	}
 }
@@ -39,6 +58,7 @@ $borderColor: $shakespeare;
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
+		background-color: $shakespeare;
 
 		@include desktop {
 			width: $desktop / 2;
@@ -60,8 +80,8 @@ $borderColor: $shakespeare;
 			flex: 1;
 			flex-basis: 33%;
 			padding: 2em;
-			border-radius: $borderWidth + 3px;
 			cursor: pointer;
+			background-color: white;
 
 			@include desktop {
 				height: $desktop / 6;

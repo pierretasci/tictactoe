@@ -7,7 +7,6 @@ export default class Square extends React.Component {
 
 		return (
 			<div className={className}>
-				Hello
 			</div>
 		);
 	}
