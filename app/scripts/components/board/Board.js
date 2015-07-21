@@ -14,6 +14,7 @@ export default class Board extends React.Component {
 		return (
 			<div className="board-wrapper">
 				<div className="board">
+					<div className="board-cover" />
 					{squares}
 				</div>
 			</div>

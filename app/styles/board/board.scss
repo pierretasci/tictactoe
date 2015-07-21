@@ -187,7 +187,7 @@ $borderColor: $shakespeare;
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
-		background-color: $shakespeare;
+		position: relative;
 
 		@include desktop {
 			width: $desktop / 2;
@@ -203,6 +203,16 @@ $borderColor: $shakespeare;
 
 		@include phones {
 			width: $phones / 2;
+		}
+
+		.board-cover {
+			position: absolute;
+			top: 25%;
+			left: 25%;
+			width: 50%;
+			height: 50%;
+			background-color: $shakespeare;
+			z-index: -1;
 		}
 
 		.square {
