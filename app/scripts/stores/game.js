@@ -74,7 +74,7 @@ var GameStore = assign({}, EventEmitter.prototype, {
     	case constants.ACTIONS.ENACT_PLAYER_MOVE:
     		_activePlayer = GameManager.C;
     		let playerMove = payload.playerMove;
-    		_board = GameManager.getNewBoardWithMove(_board, 
+    		_board = GameManager.getNewBoardWithMove(_board,
     			new Move(playerMove.row, playerMove.col, playerMove.player));
 
     		// Now start calculating the computer's next move

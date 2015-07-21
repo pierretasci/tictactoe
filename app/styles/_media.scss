@@ -1,0 +1,28 @@
+$desktop: 1200px;
+$defaultSize: 980px;
+$tablets: 768px;
+$phones: 480px;
+
+@mixin desktop {
+	@media screen and (min-width: #{$desktop}) {
+		@content;
+	}
+}
+
+@mixin defaultSize {
+	@media screen and (min-width: #{$defaultSize}) and (max-width: #{$desktop - 1}) {
+		@content;
+	}
+}
+
+@mixin tablets {
+	@media screen and (min-width: #{$tablets}) and (max-width: #{$defaultSize - 1}) {
+		@content;
+	}
+}
+
+@mixin phones {
+ 	@media screen and (min-width: #{$phones}) and (max-width: #{$tablets - 1}) {
+		@content;
+	}
+}

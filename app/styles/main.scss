@@ -1,0 +1,24 @@
+@import "fonts";
+
+html {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	overflow: hidden;
+	font-size: 10px; /* reset */
+	box-sizing: border-box !important;
+}
+
+/* Override the dumb part of bootstrap's styles */
+h1 {
+	margin: 0;
+}
+
+.container {
+	font-size: $textMedium;
+	font-family: 'Open Sans';
+	font-weight: $fontLight;
+}

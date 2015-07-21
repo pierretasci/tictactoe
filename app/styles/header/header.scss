@@ -1,0 +1,10 @@
+@import "../fonts";
+
+header {
+	text-align: center;
+	margin-top: 2em;
+
+	h1 {
+		font-weight: $fontLight;
+	}
+}

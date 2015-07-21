@@ -18,16 +18,15 @@ var babelify			= require('babelify');
 // CSS
 var sass 					= require('gulp-sass');
 var concat 				= require('gulp-concat');
-var autoprefixer 	= require('gulp-autoprefixer');
 var sourcemaps 		= require('gulp-sourcemaps');
 var csslint 			= require('gulp-csslint');
 var postcss      	= require('gulp-postcss');
 var autoprefixer 	= require('autoprefixer-core');
 
 var PATHS = {
-	JS: "app/**/*.js",
-	CSS: "app/**/*.css",
-	SASS: "app/**/*.scss",
+	JS: "app/scripts/**/*.js",
+	CSS: "app/styles/**/*.css",
+	SASS: "app/styles/**/*.scss",
 	HTML: "app/**/*.html",
 	BUILD: "build",
 	BUILD_CSS: "build/**/*.css",
