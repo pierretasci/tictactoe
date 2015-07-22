@@ -66,7 +66,7 @@ describe('GameStore', function() {
 
   	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
   	expect(GameStore.getBoard().getPlayerAt(1, 1)).toBe(GameManager.H);
-  	expect(GameStore.getBoard().getPlayerAt(3, 3)).toBe(GameManager.C);
+  	expect(GameStore.getBoard().getPlayerAt(2, 2)).toBe(GameManager.C);
 
   	// Now make a move that will force the computer to block
   	callback(actionEnactPlayerMove(1, 2, GameManager.H));
@@ -75,19 +75,18 @@ describe('GameStore', function() {
   	expect(GameStore.getBoard().getPlayerAt(1, 3)).toBe(GameManager.C);
   	expect(GameStore.getBoard().getPlayerAt(1, 2)).toBe(GameManager.H);
 
-  	// Human must now block 2, 3
-  	callback(actionEnactPlayerMove(2, 3, GameManager.H));
+  	// Human must now block 3, 1
+  	callback(actionEnactPlayerMove(3, 1, GameManager.H));
 
   	expect(GameStore.getActivePlayer()).toBe(GameManager.H);
-  	expect(GameStore.getBoard().getPlayerAt(2, 3)).toBe(GameManager.H);
-  	// The computer's next best move is to trap the human by placing it in the bottom left corner
-  	expect(GameStore.getBoard().getPlayerAt(3, 1)).toBe(GameManager.C);
+  	expect(GameStore.getBoard().getPlayerAt(3, 1)).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(2, 1)).toBe(GameManager.C);
 
-  	// Human will block 2, 2 so computer should go for win at 3, 2
-  	callback(actionEnactPlayerMove(2, 2, GameManager.H));
+  	// Human will leave win open
+  	callback(actionEnactPlayerMove(3, 3, GameManager.H));
 		expect(GameStore.getActivePlayer()).toBe(GameManager.H);
-  	expect(GameStore.getBoard().getPlayerAt(2, 2)).toBe(GameManager.H);
-  	expect(GameStore.getBoard().getPlayerAt(3, 2)).toBe(GameManager.C);  	
+  	expect(GameStore.getBoard().getPlayerAt(3, 3)).toBe(GameManager.H);
+  	expect(GameStore.getBoard().getPlayerAt(2, 3)).toBe(GameManager.C);  	
   	expect(GameStore.getBoard().isGameOver()).toBe(true);
   	expect(GameStore.getBoard().getGameWinner()).toBe(GameManager.C);
   });

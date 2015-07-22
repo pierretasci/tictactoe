@@ -1,5 +1,6 @@
 import constants from "./constants";
 
+/* http://neverstopbuilding.com/minimax */
 let GameManager = {
 	H: constants.PLAYERS.HUMAN,
 	C: constants.PLAYERS.COMPUTER,
@@ -42,22 +43,26 @@ let GameManager = {
 				// GET THE MAX
 				let maxArrayIndex = 0;
 				let maxScore = scores[0];
-				scores.map(function(score, i) {
+				for(let i = 0; i < scores.length; i++) {
+					let score = scores[i];
 					if(score > maxScore) {
+						maxScore = score;
 						maxArrayIndex = i;
 					}
-				});
+				}
 				_nextChoice = moves[maxArrayIndex];
 				return maxScore;
 			} else {
 				// GET THE MIN
 				let minArrayIndex = 0;
 				let minScore = scores[0];
-				scores.map(function(score, i) {
-					if(score > minScore) {
+				for(let i = 0; i < scores.length; i++) {
+					let score = scores[i];
+					if(score < minScore) {
+						minScore = score;
 						minArrayIndex = i;
 					}
-				});
+				}
 				_nextChoice = moves[minArrayIndex];
 				return minScore;
 			}

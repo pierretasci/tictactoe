@@ -1,10 +1,30 @@
 @import "../fonts";
+@import "../colors";
 
 header {
-	text-align: center;
 	margin-top: 2em;
+
+	.title-section {
+		text-align: center;
+	}
 
 	h1 {
 		font-weight: $fontLight;
+	}
+
+	.game-section {
+		button {
+			outline: 0;
+			background: $shakespeare;
+			border-radius: 3px;
+			margin: 0 5px;
+			border: 0;
+			padding: 3px 7px;
+			color: white;
+
+			&:hover {
+				box-shadow: 0 0 1px #333 inset;
+			}
+		}
 	}
 }

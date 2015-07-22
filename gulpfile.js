@@ -27,12 +27,14 @@ var PATHS = {
 	JS: "app/scripts/**/*.js",
 	CSS: "app/styles/**/*.css",
 	SASS: "app/styles/**/*.scss",
+	IMAGES: "app/images/**/*.svg",
 	HTML: "app/**/*.html",
 	BUILD: "build",
 	BUILD_CSS: "build/**/*.css",
 	APP: "app/app.js",
 	DEST_APP: "app.js",
-	DEST: "dist/"
+	DEST: "dist/",
+	DEST_IMAGES: "dist/images/"
 };
 
 gulp.task('sass-compile', function() {
@@ -48,6 +50,11 @@ gulp.task('sass-compile', function() {
 gulp.task('css-compile', function() {
 	return gulp.src(PATHS.CSS)
 		.pipe(gulp.dest(PATHS.BUILD))
+});
+
+gulp.task('images', function() {
+	return gulp.src(PATHS.IMAGES)
+		.pipe(gulp.dest(PATHS.DEST_IMAGES));
 });
 
 gulp.task('css-build', ['sass-compile', 'css-compile'], function() {
@@ -116,7 +123,7 @@ gulp.task('js-min', function() {
   .pipe(gulp.dest(PATHS.DEST));
 });
 
-gulp.task('serve', ['clean', 'html', 'lint', 'js-compile', 'css-build', 'server'], function() {
+gulp.task('serve', ['clean', 'html', 'images', 'lint', 'js-compile', 'css-build', 'server'], function() {
   return gulp.watch([
     PATHS.JS, PATHS.SASS, PATHS.CSS, PATHS.HTML
   ], [

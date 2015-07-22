@@ -18,7 +18,10 @@ var GameStore = assign({}, EventEmitter.prototype, {
 		_activePlayer = initialPlayer;
 		_nextChoice = null;
 
-		// If the computer has the first choice, so calculate our first move
+		// Board changed, emit
+		GameStore.emitChange();
+
+		// If the computer has the first choice, calculate its first move
 		if(initialPlayer == GameManager.C) {
 			GameStore.calculateComputerMove();
 		}
@@ -42,7 +45,11 @@ var GameStore = assign({}, EventEmitter.prototype, {
 
 		// Apply this move to the board
 		_board = GameManager.getNewBoardWithMove(_board, _nextChoice);
-		_activePlayer = GameManager.H;
+		if(_board.isGameOver()) {
+			_activePlayer = null;
+		} else {
+			_activePlayer = GameManager.H;
+		}
 		GameStore.emitChange();
 	},
 
@@ -77,8 +84,14 @@ var GameStore = assign({}, EventEmitter.prototype, {
     		_board = GameManager.getNewBoardWithMove(_board,
     			new Move(playerMove.row, playerMove.col, playerMove.player));
 
-    		// Now start calculating the computer's next move
-    		GameStore.calculateComputerMove();
+    		if(_board.isGameOver()) {
+    			_activePlayer = null;
+    		} else {
+    			GameStore.calculateComputerMove();
+    		}
+
+    		GameStore.emitChange();
+
     		break;
     }
 
