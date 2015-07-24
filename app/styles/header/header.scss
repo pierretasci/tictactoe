@@ -2,29 +2,18 @@
 @import "../colors";
 
 header {
-	margin-top: 2em;
+	background-color: $darkBrown;
 
 	.title-section {
 		text-align: center;
+		height: 14em;
 	}
 
 	h1 {
 		font-weight: $fontLight;
-	}
-
-	.game-section {
-		button {
-			outline: 0;
-			background: $shakespeare;
-			border-radius: 3px;
-			margin: 0 5px;
-			border: 0;
-			padding: 3px 7px;
-			color: white;
-
-			&:hover {
-				box-shadow: 0 0 1px #333 inset;
-			}
-		}
+		font-size: 7.5em;
+		font-weight: bold;
+		color: white;
+		line-height: 140px;
 	}
 }

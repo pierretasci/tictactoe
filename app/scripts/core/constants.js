@@ -18,5 +18,10 @@ export default {
 	ACTIONS: keyMirror({
 		START_GAME: null,
 		ENACT_PLAYER_MOVE: null
+	}),
+	START_GAME_STATE: keyMirror({
+		PRE: null,
+		NEW_GAME: null,
+		PLAY_AGAIN: null
 	})
 };

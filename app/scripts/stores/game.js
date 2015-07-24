@@ -23,7 +23,8 @@ var GameStore = assign({}, EventEmitter.prototype, {
 
 		// If the computer has the first choice, calculate its first move
 		if(initialPlayer == GameManager.C) {
-			GameStore.calculateComputerMove();
+      // We need to do this after the UI has had a chance to update
+      window.setTimeout(GameStore.calculateComputerMove.bind(this), 50);
 		}
 	},
 
