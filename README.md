@@ -42,4 +42,4 @@ jest
 ```
 
 ## Final Note
-As much as I would like to take credit for how beautiful this tic tac toe game I must give 100% of the credit to my lovely girlfriend who saw my initial implementation (which wasn't horrible looking and was responsive) and decided she wanted to make it better. She gave me a design and I refactored to it.
+As much as I would like to take credit for how beautiful this tic tac toe game is I must give 100% of the credit to my lovely girlfriend who saw my initial implementation (which wasn't horrible looking and was responsive) and decided she wanted to make it better. She gave me a design and I refactored to it.
