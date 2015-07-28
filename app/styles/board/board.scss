@@ -223,13 +223,13 @@ $borderColor: $darkBrown;
 			cursor: pointer;
 			background-color: $lightBrown;
 
+			&:not(.active) {
+				pointer-events: none;
+			}
+
 			.game-piece {
 				width: 100%;
 				height: 100%;
-
-				&:not(.active) {
-					pointer-events: none;
-				}
 
 				&.human {
 					background: url('/images/x.svg');
@@ -281,11 +281,13 @@ $borderColor: $darkBrown;
 
 		.loading {
 			position: absolute;
+			z-index: 100;
 			top: 0;
 			left: 0;
 			width: 100%;
 			height: 100%;
 			background-color: $backgroundGrey;
+			pointer-events: none;
 		}
 	}
 }

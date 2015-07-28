@@ -22,20 +22,24 @@ export default class Square extends React.Component {
 
 		let active = (!this.props.player &&
 			(GameStore.getBoard() &&
-			!GameStore.getBoard().isGameOver()) ? "active" : null);
+			!GameStore.getBoard().isGameOver()) ? "active" : null &&
+			GameStore.getActivePlayer() === constants.PLAYERS.HUMAN);
 
 		return (
-			<div className={className} onClick={this.sendHumanAction}>
-				<div className={["game-piece",content,active].join(" ")}>
+			<div className={[className, active].join(" ")} onClick={this.sendHumanAction}>
+				<div className={["game-piece",content].join(" ")}>
 				</div>
 			</div>
 		);
 	}
 
-	sendHumanAction() {
+	sendHumanAction(e) {
 		if(GameStore.getActivePlayer() === constants.PLAYERS.HUMAN &&
-			!GameStore.getBoard().isGameOver()) {
+			!GameStore.getBoard().isGameOver() &&
+			this.props.player == null) {
 			GameActions.enactPlayerMove(this.props.index);
 		}
+
+		e.preventDefault();
 	}
 }
